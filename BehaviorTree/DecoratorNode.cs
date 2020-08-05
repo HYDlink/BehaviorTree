@@ -20,7 +20,7 @@ namespace BehaviorTree
 
     public class IfNode : DecoratorNode
     {
-        public IfNode(Func<bool> pred, TreeNode child_, string nodeName) :
+        public IfNode(Func<bool> pred, TreeNode child_) :
             base(new SequenceNode(new List<TreeNode> { new ConditionNode(pred), child_ }))
         { }
     }
