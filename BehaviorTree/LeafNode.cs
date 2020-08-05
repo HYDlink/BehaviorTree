@@ -11,50 +11,38 @@ namespace BehaviorTree
 
     public class TreeNode
     {
-        public TreeNode(string nodeName, string nodeType)
-        {
-            NodeName = nodeName;
-            NodeType = nodeType;
-        }
-
-        public string NodeType;
-        public string NodeName;
+        public string NodeName { get; set; }
         public virtual State Tick() => State.Success;
     }
 
     public class TaskNode : TreeNode
     {
-        public Action Task;
-        public Func<bool> SuccessPred;
-
-        public TaskNode(Action task, Func<bool> successPred, string nodeName)
-            : base(nodeName, "TaskNode")
-        {
-            Task = task;
-            SuccessPred = successPred;
-        }
+        public Func<bool> SuccessPred { get; set; }
+        private Action _task;
+        public TaskNode(Action task) { _task = task; }
 
         public override State Tick()
         {
-            if (SuccessPred())
+            _task();
+
+            if (SuccessPred == null || SuccessPred())
             {
                 return State.Success;
             }
 
-            Task();
             return State.Running;
         }
     }
 
     public class ConditionNode : TreeNode
     {
-        private Func<bool> Pred;
+        private Func<bool> _pred;
 
-        public ConditionNode(Func<bool> pred, string nodeName) : base(nodeName, "ConditionNode")
+        public ConditionNode(Func<bool> pred)
         {
-            Pred = pred;
+            _pred = pred;
         }
 
-        public override State Tick() => Pred() ? State.Success : State.Fail;
+        public override State Tick() => _pred() ? State.Success : State.Fail;
     }
 }

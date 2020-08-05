@@ -7,7 +7,7 @@ namespace BehaviorTree
     {
         protected List<TreeNode> Children;
 
-        public CompositeNode(List<TreeNode> children, string nodeName, string nodeType) : base(nodeName, nodeType)
+        public CompositeNode(List<TreeNode> children)
         {
             Children = children;
         }
@@ -17,10 +17,11 @@ namespace BehaviorTree
     {
         private int runningIndex = 0;
 
-        private void Reset() => runningIndex = 0;
+        public SelectorNode(List<TreeNode> children) : base(children)
+        {
+        }
 
-        public SelectorNode(List<TreeNode> children, string nodeName) : base(children, nodeName, "SelectorNode")
-        { }
+        private void Reset() => runningIndex = 0;
 
         /// <summary>
         /// 找到第一个可以执行的结点，对其执行后返回
@@ -57,11 +58,11 @@ namespace BehaviorTree
     {
         private int runningIndex = 0;
 
-        private void Reset() => runningIndex = 0;
-
-        public SequenceNode(List<TreeNode> children, string nodeName) : base(children, nodeName, "SequenceNode")
+        public SequenceNode(List<TreeNode> children) : base(children)
         {
         }
+
+        private void Reset() => runningIndex = 0;
 
         /// <summary>
         /// 找到第一个可以执行的结点，对其执行后返回
@@ -107,8 +108,10 @@ namespace BehaviorTree
         private int failCnt = 0;
 
         public Policy policy = Policy.FailedWhenOneFailed;
-        public ParallelNode(List<TreeNode> children, string nodeName) : base(children, nodeName, "ParallelNode")
-        { }
+
+        public ParallelNode(List<TreeNode> children) : base(children)
+        {
+        }
 
         private void Reset()
         {
